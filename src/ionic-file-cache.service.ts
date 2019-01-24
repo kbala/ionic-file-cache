@@ -10,7 +10,7 @@ declare var window: any;
 export class IonicFileCacheService {
   constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {}
 
-  public async getCachedFile(url: string):Promise<SafeUrl> {
+  public async getCachedFile(url: string): Promise<SafeUrl> {
     return this.getFileEntry(url).then(fileEntry => {
       const fileUrl = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
       return this.domSanitizer.bypassSecurityTrustUrl(fileUrl);
