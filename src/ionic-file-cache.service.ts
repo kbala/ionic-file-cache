@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { File, FileEntry } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { Md5 } from 'md5-typescript';
@@ -10,7 +10,7 @@ declare var window: any;
 export class IonicFileCacheService {
   constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {}
 
-  public async getCachedFile(url: string) {
+  public async getCachedFile(url: string):Promise<SafeUrl> {
     return this.getFileEntry(url).then(fileEntry => {
       const fileUrl = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
       return this.domSanitizer.bypassSecurityTrustUrl(fileUrl);
