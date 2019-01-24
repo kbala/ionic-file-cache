@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { File, FileEntry } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
-import { md5 } from './md5';
+import {Md5} from "md5-typescript";
+
 
 declare var window: any;
 
@@ -18,14 +19,14 @@ export class IonicFileCacheService {
   }
   public cacheFiles(urls: string[]) {
     urls.forEach(url => {
-      const fileKey = md5(url);
+      const fileKey = Md5.init(url);
       const path = this.file.cacheDirectory;
       this.cache(url, path + fileKey)
     })
   }
 
   public deleteCache(url: string) {
-    const fileKey = md5(url);
+    const fileKey = Md5.init(url);
     const path = this.file.cacheDirectory;
     this.file.removeFile(path, fileKey);
   }
@@ -38,7 +39,7 @@ export class IonicFileCacheService {
 
   private async getFileEntry(url: string) {
     try {
-      const fileKey = md5(url);
+      const fileKey = Md5.init(url);
 
       const path = this.file.cacheDirectory;
       const isCached = await this.isCached(path, fileKey);

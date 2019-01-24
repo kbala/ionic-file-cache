@@ -1,6 +1,6 @@
 // Taken from https://github.com/killmenot/webtoolkit.md5
 
-export let md5 = (string) => {
+export let md5 = (string:string) => {
 
     function RotateLeft(lValue, iShiftBits) {
       return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
