@@ -1,0 +1,45 @@
+{
+    "name": "ionic-file-cache",
+    "version": "0.0.1",
+    "description": "Ionic cache service for files.",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "scripts": {
+        "test": "jest --config jestconfig.json",
+        "build": "tsc",
+        "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+        "lint": "tslint -p tsconfig.json",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm test && npm run lint",
+        "preversion": "npm run lint",
+        "version": "npm run format && git add -A src",
+        "postversion": "git push && git push --tags"
+    },
+    "files": [
+        "lib/**/*"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/amindia/ionic-file-cache.git"
+    },
+    "keywords": [
+        "ionic",
+        "cache",
+        "files"
+    ],
+    "author": "KBala",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/amindia/ionic-file-cache/issues"
+    },
+    "homepage": "https://github.com/amindia/ionic-file-cache#readme",
+    "devDependencies": {
+        "@types/jest": "^23.3.13",
+        "jest": "^23.6.0",
+        "prettier": "^1.16.1",
+        "ts-jest": "^23.10.5",
+        "tslint": "^5.12.1",
+        "tslint-config-prettier": "^1.17.0",
+        "typescript": "^3.2.4"
+    }
+}
