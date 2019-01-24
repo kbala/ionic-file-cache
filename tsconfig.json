@@ -1,11 +1,25 @@
 {
     "compilerOptions": {
-      "target": "es5",
-      "module": "commonjs",
-      "declaration": true,
-      "outDir": "./lib",
-      "strict": true
+        "target": "es5",
+        "module": "es2015",
+        "moduleResolution": "node",
+        "sourceMap": true,
+        "inlineSources": true,
+        "declaration": true,
+        "noImplicitAny": false,
+        "experimentalDecorators": true,
+        "esModuleInterop":true,
+        "lib": [
+            "dom",
+            "es2015"
+        ],
+        "outDir": "./lib",
     },
-    "include": ["src"],
-    "exclude": ["node_modules", "**/__tests__/*"]
-  }
+    "include": [
+        "src"
+    ],
+    "exclude": [
+        "node_modules",
+        "**/__tests__/*"
+    ]
+}
