@@ -14,7 +14,7 @@
         "preversion": "npm run lint",
         "version": "npm run format && git add -A src",
         "postversion": "git push && git push --tags",
-        "full": "npm run prepare && npm version patch && npm publish"
+        "full": "rm -rf lib && npm run prepare && npm version patch && npm publish"
     },
     "files": [
         "lib/**/*"
