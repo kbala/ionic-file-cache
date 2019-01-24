@@ -4,16 +4,13 @@ import { File } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { IonicModule } from 'ionic-angular';
 @NgModule({
-    imports: [
-        IonicModule,
-        BrowserModule
-    ],
+  imports: [IonicModule, BrowserModule],
 })
 export class IonicFileCacheModule {
-    public static forRoot(): ModuleWithProviders {
-        return {
-            ngModule: IonicFileCacheModule,
-            providers: [File, FileTransfer],
-        };
-    }
+  public static forRoot(): ModuleWithProviders {
+    return {
+      ngModule: IonicFileCacheModule,
+      providers: [File, FileTransfer],
+    };
+  }
 }
