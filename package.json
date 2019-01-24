@@ -36,9 +36,11 @@
     "devDependencies": {
         "@angular/common": "^5.2.10",
         "@angular/core": "^5.2.10",
+        "@angular/forms": "^5.2.10",
         "@angular/platform-browser": "^5.2.10",
         "@ionic-native/core": "^4.20.0",
         "@types/jest": "^23.3.13",
+        "ionic-angular": "^3.9.2",
         "jest": "^23.6.0",
         "prettier": "^1.16.1",
         "rxjs": "^5.5.11",
@@ -50,7 +52,6 @@
     "dependencies": {
         "@ionic-native/file": "^4.20.0",
         "@ionic-native/file-transfer": "^4.20.0",
-        "ionic-angular": "^3.9.2",
         "md5-typescript": "^1.0.5"
     }
 }
