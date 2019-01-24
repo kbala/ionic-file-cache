@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { File, FileEntry } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
-import {Md5} from "md5-typescript";
-
+import { Md5 } from 'md5-typescript';
 
 declare var window: any;
 
 @Injectable()
 export class IonicFileCacheService {
-  constructor(private file:File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) { }
+  constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {}
 
   public async getCachedFile(url: string) {
     return this.getFileEntry(url).then(fileEntry => {
@@ -21,8 +20,8 @@ export class IonicFileCacheService {
     urls.forEach(url => {
       const fileKey = Md5.init(url);
       const path = this.file.cacheDirectory;
-      this.cache(url, path + fileKey)
-    })
+      this.cache(url, path + fileKey);
+    });
   }
 
   public deleteCache(url: string) {
@@ -53,7 +52,7 @@ export class IonicFileCacheService {
     }
   }
 
-    private async getCache(path: string, fileKey: string) {
+  private async getCache(path: string, fileKey: string) {
     return this.file.resolveDirectoryUrl(path).then(async dirEntry => {
       return this.file.getFile(dirEntry, fileKey, {}).then(fileEntry => {
         return fileEntry;
@@ -69,10 +68,13 @@ export class IonicFileCacheService {
   }
 
   private async isCached(path: string, fileKey: string) {
-    return this.file.checkFile(path, fileKey).then(bool => {
-      return bool;
-    }).catch(err => {
-      return false
-    });
+    return this.file
+      .checkFile(path, fileKey)
+      .then(bool => {
+        return bool;
+      })
+      .catch(err => {
+        return false;
+      });
   }
 }
