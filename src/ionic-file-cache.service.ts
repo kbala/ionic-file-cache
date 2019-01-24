@@ -8,8 +8,8 @@ declare var window: any;
 
 @Injectable()
 export class IonicFileCacheService {
-  private domSanitizer: DomSanitizer;
-  constructor(private file: File, private fileTransfer: FileTransfer) {}
+  
+  constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {}
 
   public async getCachedFile(url: string): Promise<SafeUrl> {
     return this.getFileEntry(url).then(fileEntry => {
