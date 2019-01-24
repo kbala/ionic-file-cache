@@ -1,2 +1,1 @@
-export * from './ionic-file-cache.module';
-export * from './ionic-file-cache.service';
+export * from './providers/file-cache.provider';

@@ -7,7 +7,7 @@ import { Md5 } from 'md5-typescript';
 declare var window: any;
 
 @Injectable()
-export class IonicFileCacheService {
+export class FileCacheProvider {
   constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {}
 
   public async getCachedFile(url: string): Promise<SafeUrl> {
