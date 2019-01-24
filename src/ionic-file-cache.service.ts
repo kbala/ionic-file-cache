@@ -1,21 +1,41 @@
 import { Injectable } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { File, FileEntry } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { md5 } from './md5';
-import { DomSanitizer } from '@angular/platform-browser';
 
 declare var window: any;
 
 @Injectable()
 export class IonicFileCacheService {
-  constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) { }
+  constructor(private file:File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) { }
 
   public async getCachedFile(url: string) {
     return this.getFileEntry(url).then(fileEntry => {
-      const url = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
-      return this.domSanitizer.bypassSecurityTrustUrl(url);
+      const fileUrl = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
+      return this.domSanitizer.bypassSecurityTrustUrl(fileUrl);
     });
   }
+  public cacheFiles(urls: string[]) {
+    urls.forEach(url => {
+      const fileKey = md5(url);
+      const path = this.file.cacheDirectory;
+      this.cache(url, path + fileKey)
+    })
+  }
+
+  public deleteCache(url: string) {
+    const fileKey = md5(url);
+    const path = this.file.cacheDirectory;
+    this.file.removeFile(path, fileKey);
+  }
+
+  public async clearCache() {
+    return this.file.removeDir(this.file.cacheDirectory, '').then(result => {
+      return result.success;
+    });
+  }
+
   private async getFileEntry(url: string) {
     try {
       const fileKey = md5(url);
@@ -32,18 +52,7 @@ export class IonicFileCacheService {
     }
   }
 
-  public deleteCache(url: string) {
-    const fileKey = md5(url);
-    const path = this.file.cacheDirectory;
-    this.file.removeFile(path, fileKey);
-  }
-
-  public async clearCache() {
-    return this.file.removeDir(this.file.cacheDirectory, '').then(result => {
-      return result.success;
-    });
-  }
-  private async getCache(path: string, fileKey: string) {
+    private async getCache(path: string, fileKey: string) {
     return this.file.resolveDirectoryUrl(path).then(async dirEntry => {
       return this.file.getFile(dirEntry, fileKey, {}).then(fileEntry => {
         return fileEntry;
@@ -51,13 +60,6 @@ export class IonicFileCacheService {
     });
   }
 
-  public cacheFiles(urls:string[]){
-    urls.forEach(url=>{
-      const fileKey = md5(url);
-      const path = this.file.cacheDirectory;
-      this.cache(url, path + fileKey)
-    })
-  }
   private async cache(url: string, localFilePath: string) {
     const fileTansferObject = this.fileTransfer.create();
     return fileTansferObject.download(url, localFilePath, true).then((fileEntry: FileEntry) => {
