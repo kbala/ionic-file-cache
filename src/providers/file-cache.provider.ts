@@ -14,16 +14,18 @@ export class FileCacheProvider {
   }
 
   public async getCachedFile(url: string): Promise<SafeUrl> {
-    return this.getFileEntry(url).then(fileEntry => {
-      const fileUrl = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
-      return this.domSanitizer.bypassSecurityTrustUrl(fileUrl);
-    }).catch(err => {
-      if (err.name === "inprogress") {
-        return url;
-      } else {
-        throw err;
-      }
-    });
+    return this.getFileEntry(url)
+      .then(fileEntry => {
+        const fileUrl = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
+        return this.domSanitizer.bypassSecurityTrustUrl(fileUrl);
+      })
+      .catch(err => {
+        if (err.name === 'inprogress') {
+          return url;
+        } else {
+          throw err;
+        }
+      });
   }
   public cacheFiles(urls: string[]) {
     urls.forEach(url => {
@@ -81,8 +83,8 @@ export class FileCacheProvider {
     } else {
       const error = new Error();
       error.message = 'Download already started for this file: ' + fileKey;
-      error.name = "inprogress"
-      throw error
+      error.name = 'inprogress';
+      throw error;
     }
   }
 
