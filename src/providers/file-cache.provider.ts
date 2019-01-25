@@ -17,6 +17,12 @@ export class FileCacheProvider {
     return this.getFileEntry(url).then(fileEntry => {
       const fileUrl = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
       return this.domSanitizer.bypassSecurityTrustUrl(fileUrl);
+    }).catch(err => {
+      if (err.name === "inprogress") {
+        return url;
+      } else {
+        throw err;
+      }
     });
   }
   public cacheFiles(urls: string[]) {
@@ -73,7 +79,10 @@ export class FileCacheProvider {
         return fileEntry;
       });
     } else {
-      throw new Error('Download already started for this file: ' + fileKey);
+      const error = new Error();
+      error.message = 'Download already started for this file: ' + fileKey;
+      error.name = "inprogress"
+      throw error
     }
   }
 
