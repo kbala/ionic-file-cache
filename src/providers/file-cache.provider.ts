@@ -66,14 +66,14 @@ export class FileCacheProvider {
   private async cache(url: string, path: string, fileKey: string) {
     const index = this.downloads.indexOf(fileKey);
     if (index === -1) {
-      this.downloads.push(fileKey)
+      this.downloads.push(fileKey);
       const fileTansferObject = this.fileTransfer.create();
       return fileTansferObject.download(url, path + fileKey, true).then((fileEntry: FileEntry) => {
         this.downloads.splice(index, 1);
         return fileEntry;
       });
     } else {
-      throw new Error("Download already started for this file: " + fileKey);
+      throw new Error('Download already started for this file: ' + fileKey);
     }
   }
 
