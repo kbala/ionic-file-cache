@@ -8,7 +8,10 @@ declare var window: any;
 
 @Injectable()
 export class FileCacheProvider {
-  constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {}
+  private downloads: string[];
+  constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {
+    this.downloads = new Array();
+  }
 
   public async getCachedFile(url: string): Promise<SafeUrl> {
     return this.getFileEntry(url).then(fileEntry => {
@@ -20,7 +23,7 @@ export class FileCacheProvider {
     urls.forEach(url => {
       const fileKey = Md5.init(url);
       const path = this.file.cacheDirectory;
-      this.cache(url, path + fileKey);
+      this.cache(url, path, fileKey);
     });
   }
 
@@ -45,7 +48,7 @@ export class FileCacheProvider {
       if (isCached) {
         return await this.getCache(path, fileKey);
       } else {
-        return await this.cache(url, path + fileKey);
+        return await this.cache(url, path, fileKey);
       }
     } catch (error) {
       throw error;
@@ -60,11 +63,18 @@ export class FileCacheProvider {
     });
   }
 
-  private async cache(url: string, localFilePath: string) {
-    const fileTansferObject = this.fileTransfer.create();
-    return fileTansferObject.download(url, localFilePath, true).then((fileEntry: FileEntry) => {
-      return fileEntry;
-    });
+  private async cache(url: string, path: string, fileKey: string) {
+    const index = this.downloads.indexOf(fileKey);
+    if (index === -1) {
+      this.downloads.push(fileKey)
+      const fileTansferObject = this.fileTransfer.create();
+      return fileTansferObject.download(url, path + fileKey, true).then((fileEntry: FileEntry) => {
+        this.downloads.splice(index, 1);
+        return fileEntry;
+      });
+    } else {
+      throw new Error("Download already started for this file: " + fileKey);
+    }
   }
 
   private async isCached(path: string, fileKey: string) {
