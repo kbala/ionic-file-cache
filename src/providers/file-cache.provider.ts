@@ -13,6 +13,11 @@ export class FileCacheProvider {
     this.downloads = new Array();
   }
 
+  /**
+   * It downloads the files from given url and cache it into local file system.
+   * It returns local file url if already cached, otherwise return the given url, and start caching behind.
+   * @param url The web url that need to be cached.
+   */
   public async getCachedFile(url: string): Promise<SafeUrl> {
     return this.getFileEntry(url)
       .then(fileEntry => {
@@ -27,6 +32,11 @@ export class FileCacheProvider {
         }
       });
   }
+
+  /**
+   * it just downloads the given urls and cache it locally. We can use this method if you want cache the files for later use.
+   * @param urls Array of web urls that needs to be cached.
+   */
   public cacheFiles(urls: string[]) {
     urls.forEach(url => {
       const fileKey = Md5.init(url);
@@ -35,12 +45,19 @@ export class FileCacheProvider {
     });
   }
 
+  /**
+   * The respective local file of given web url will be deleted.
+   * @param url The web url.
+   */
   public deleteCache(url: string) {
     const fileKey = Md5.init(url);
     const path = this.file.cacheDirectory;
     this.file.removeFile(path, fileKey);
   }
 
+  /**
+   * It deletes all files from device cache directory.
+   */
   public async clearCache() {
     return this.file.removeDir(this.file.cacheDirectory, '').then(result => {
       return result.success;
