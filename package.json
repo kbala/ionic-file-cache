@@ -35,6 +35,7 @@
     },
     "homepage": "https://github.com/amindia/ionic-file-cache#readme",
     "devDependencies": {
+        "@angular/common": "^5.2.10",
         "@angular/core": "^5.2.10",
         "@angular/platform-browser": "^5.2.10",
         "@ionic-native/core": "^4.20.0",
@@ -50,6 +51,7 @@
     "dependencies": {
         "@ionic-native/file": "^4.20.0",
         "@ionic-native/file-transfer": "^4.20.0",
-        "md5-typescript": "^1.0.5"
+        "md5-typescript": "^1.0.5",
+        "zone.js": "^0.8.29"
     }
 }
