@@ -10,7 +10,7 @@ Ionic File Cache, is for all kind of files (images, videos, docs, etc) to cache 
 npm install ionic-file-cache --save
 ```
 
-### Install the dependencies
+### Install the additional dependencies
 
 This module requires ionic native plugins and latest ionic webview, Please install the following plugins
 + [File](https://ionicframework.com/docs/v3/native/file/)
