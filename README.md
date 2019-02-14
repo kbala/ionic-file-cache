@@ -6,6 +6,8 @@ Ionic File Cache, is for all kind of files (images, videos, docs, etc) to cache 
 
 ### Install the ionic file cache
 
+For Ionic v3, Click [here](https://github.com/amindia/ionic-file-cache/tree/ionicv3)
+
 ```bash
 npm install ionic-file-cache --save
 ```
@@ -13,8 +15,8 @@ npm install ionic-file-cache --save
 ### Install the additional dependencies
 
 This module requires ionic native plugins and latest ionic webview, Please install the following plugins
-+ [File](https://ionicframework.com/docs/v3/native/file/)
-+ [File Transfer](https://ionicframework.com/docs/v3/native/file-transfer/)
++ [File](https://ionicframework.com/docs/native/file)
++ [File Transfer](https://ionicframework.com/docs/native/file-transfer)
 + [Ionic Webview](https://github.com/ionic-team/cordova-plugin-ionic-webview)
 
 
@@ -24,20 +26,16 @@ app.module.ts
 
 ```ts
 import { FileCacheProvider } from "ionic-file-cache";
-
+import { File } from '@ionic-native/file/ngx';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 
 @NgModule({
-  declarations: [
-    MyApp,
-  ],
-  imports: [
-    IonicModule.forRoot(MyApp),
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp
-  ],
+  .
+  .
+  .
   providers: [
+    File.
+    FileTransfer,
     FileCacheProvider    
   ]
 })
