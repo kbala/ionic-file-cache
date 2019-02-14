@@ -1,6 +1,6 @@
 {
     "name": "ionic-file-cache",
-    "version": "0.0.19",
+    "version": "1.0.0",
     "description": "Ionic cache service for files.",
     "main": "lib/index.js",
     "types": "lib/index.d.ts",
