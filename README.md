@@ -34,7 +34,7 @@ import { FileTransfer } from '@ionic-native/file-transfer/ngx';
   .
   .
   providers: [
-    File.
+    File,
     FileTransfer,
     FileCacheProvider    
   ]
