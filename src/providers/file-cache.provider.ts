@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { File, FileEntry } from '@ionic-native/file';
-import { FileTransfer } from '@ionic-native/file-transfer';
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+import { File, FileEntry } from '@ionic-native/file/ngx';
 import { Md5 } from 'md5-typescript';
 
 declare var window: any;
