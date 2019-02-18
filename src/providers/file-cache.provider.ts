@@ -81,11 +81,12 @@ export class FileCacheProvider {
   }
 
   private async getCache(path: string, fileKey: string) {
-    return this.file.resolveDirectoryUrl(path).then(async dirEntry => {
-      return this.file.getFile(dirEntry, fileKey, {}).then(fileEntry => {
-        return fileEntry;
-      });
-    });
+    try {
+      const dirEntry = await this.file.resolveDirectoryUrl(path);
+      return await this.file.getFile(dirEntry, fileKey, {});
+    } catch (error) {
+      throw error;
+    }
   }
 
   private async cache(url: string, path: string, fileKey: string) {
