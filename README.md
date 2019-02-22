@@ -17,7 +17,7 @@ npm install ionic-file-cache --save
 This module requires ionic native plugins and latest ionic webview, Please install the following plugins
 + [File](https://ionicframework.com/docs/native/file)
 + [File Transfer](https://ionicframework.com/docs/native/file-transfer)
-+ [Ionic Webview](https://github.com/ionic-team/cordova-plugin-ionic-webview)
++ [Ionic Webview](https://github.com/ionic-team/cordova-plugin-ionic-webview) version >=3.0.0
 
 
 # Usage
