@@ -52,10 +52,12 @@ export class MediaComponent {
     public imageUrl: SafeUrl = "assets/imgs/loading.gif";
 
     constructor(private fileCachePvdr:FileCacheProvider){
+        // Cache it a live url
         this.getCachedFile('image url')
     }
 
     async getCachedFile(url: string) {
+        // It returns the cached url which is sanitized by `domSanitizer.bypassSecurityTrustUrl()`
         this.imageUrl = await this.fileCachePvdr.getCachedFile(url);
     }
 }
