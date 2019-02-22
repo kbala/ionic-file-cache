@@ -52,7 +52,7 @@ export class MediaComponent {
     public imageUrl: SafeUrl = "assets/imgs/loading.gif";
 
     constructor(private fileCachePvdr:FileCacheProvider){
-        // Cache it a live url
+        // Cache a live url
         this.getCachedFile('image url')
     }
 
