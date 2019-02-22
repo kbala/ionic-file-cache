@@ -16,6 +16,7 @@ export class FileCacheProvider {
   /**
    * It downloads the files from given url and cache it into local file system.
    * It returns local file url if already cached, otherwise return the given url, and start caching behind.
+   * It return the url sanitized by `domSanitizer.bypassSecurityTrustUrl()`
    * @param url The web url that need to be cached.
    */
   public async getCachedFile(url: string): Promise<SafeUrl> {
