@@ -27,7 +27,7 @@ export class FileCacheProvider {
       } else {
         throw err;
       }
-    }    
+    }
   }
 
   /**
