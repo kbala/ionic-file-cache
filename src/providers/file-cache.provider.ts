@@ -16,22 +16,18 @@ export class FileCacheProvider {
   /**
    * It downloads the files from given url and cache it into local file system.
    * It returns local file url if already cached, otherwise return the given url, and start caching behind.
-   * It return the url cached by `domSanitizer.bypassSecurityTrustUrl()`
    * @param url The web url that need to be cached.
    */
-  public async getCachedFile(url: string): Promise<SafeUrl> {
-    return this.getFileEntry(url)
-      .then(fileEntry => {
-        const fileUrl = window.Ionic.WebView.convertFileSrc(fileEntry.nativeURL);
-        return this.domSanitizer.bypassSecurityTrustUrl(fileUrl);
-      })
-      .catch(err => {
-        if (err.name === 'inprogress') {
-          return url;
-        } else {
-          throw err;
-        }
-      });
+  public async cachedFile(url: string): Promise<string> {
+    try {
+      return await this.getCachedFile(url);
+    } catch (err) {
+      if (err.name === 'inprogress') {
+        return url;
+      } else {
+        throw err;
+      }
+    }    
   }
 
   /**
@@ -65,14 +61,14 @@ export class FileCacheProvider {
     });
   }
 
-  private async getFileEntry(url: string) {
+  private async getCachedFile(url: string) {
     try {
       const fileKey = Md5.init(url);
 
       const path = this.file.cacheDirectory;
       const isCached = await this.isCached(path, fileKey);
       if (isCached) {
-        return await this.getCache(path, fileKey);
+        return path + fileKey;
       } else {
         return await this.cache(url, path, fileKey);
       }
@@ -81,14 +77,14 @@ export class FileCacheProvider {
     }
   }
 
-  private async getCache(path: string, fileKey: string) {
-    try {
-      const dirEntry = await this.file.resolveDirectoryUrl(path);
-      return await this.file.getFile(dirEntry, fileKey, {});
-    } catch (error) {
-      throw error;
-    }
-  }
+  // private async getCache(path: string, fileKey: string) {
+  //   try {
+  //     const dirEntry = await this.file.resolveDirectoryUrl(path);
+  //     return await this.file.getFile(dirEntry, fileKey, {});
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
   private async cache(url: string, path: string, fileKey: string) {
     const index = this.downloads.indexOf(fileKey);
@@ -97,7 +93,7 @@ export class FileCacheProvider {
       const fileTansferObject = this.fileTransfer.create();
       return fileTansferObject.download(url, path + fileKey, true).then((fileEntry: FileEntry) => {
         this.downloads.splice(index, 1);
-        return fileEntry;
+        return path + fileKey;
       });
     } else {
       const error = new Error();
