@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { File, FileEntry } from '@ionic-native/file';
+import { File, RemoveResult } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { Md5 } from 'md5-typescript';
 
@@ -9,7 +8,7 @@ declare var window: any;
 @Injectable()
 export class FileCacheProvider {
   private downloads: string[];
-  constructor(private file: File, private fileTransfer: FileTransfer, private domSanitizer: DomSanitizer) {
+  constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
   }
 
@@ -46,7 +45,7 @@ export class FileCacheProvider {
    * The respective local file of given web url will be deleted.
    * @param url The web url.
    */
-  public async deleteCache(url: string) {
+  public async deleteCache(url: string): Promise<RemoveResult> {
     const fileKey = Md5.init(url);
     const path = this.file.cacheDirectory;
     return await this.file.removeFile(path, fileKey);
@@ -55,11 +54,11 @@ export class FileCacheProvider {
   /**
    * It deletes all files from device cache directory.
    */
-  public async clearCache() {
+  public async clearCache(): Promise<RemoveResult> {
     return await this.file.removeDir(this.file.cacheDirectory, '');
   }
 
-  private async getCachedFile(url: string) {
+  private async getCachedFile(url: string): Promise<string> {
     try {
       const fileKey = Md5.init(url);
 
@@ -84,7 +83,7 @@ export class FileCacheProvider {
   //   }
   // }
 
-  private async cache(url: string, path: string, fileKey: string) {
+  private async cache(url: string, path: string, fileKey: string): Promise<string> {
     try {
       const index = this.downloads.indexOf(fileKey);
       if (index === -1) {
@@ -104,7 +103,7 @@ export class FileCacheProvider {
     }
   }
 
-  private async isCached(path: string, fileKey: string) {
+  private async isCached(path: string, fileKey: string): Promise<boolean> {
     try {
       return await this.file.checkFile(path, fileKey);
     } catch (error) {
