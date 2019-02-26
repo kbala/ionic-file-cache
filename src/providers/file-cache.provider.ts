@@ -93,7 +93,6 @@ export class FileCacheProvider {
         await fileTansferObject.download(url, path + fileKey, true);
         this.downloads.splice(index, 1);
         return path + fileKey;
-
       } else {
         const error = new Error();
         error.message = 'Download already started for this file: ' + fileKey;
