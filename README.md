@@ -51,6 +51,8 @@ export class MediaComponent {
     public imageUrl: string = "assets/imgs/loading.gif";
 
     constructor(private fileCachePvdr:FileCacheProvider){
+        this.fileCachePvdr.setDefaultTTL(60 * 60 * 1000);
+
         // Cache a live url
         this.getCachedFile('image url')
     }
