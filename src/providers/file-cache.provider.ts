@@ -46,19 +46,17 @@ export class FileCacheProvider {
    * The respective local file of given web url will be deleted.
    * @param url The web url.
    */
-  public deleteCache(url: string) {
+  public async deleteCache(url: string) {
     const fileKey = Md5.init(url);
     const path = this.file.cacheDirectory;
-    this.file.removeFile(path, fileKey);
+    return await this.file.removeFile(path, fileKey);
   }
 
   /**
    * It deletes all files from device cache directory.
    */
   public async clearCache() {
-    return this.file.removeDir(this.file.cacheDirectory, '').then(result => {
-      return result.success;
-    });
+    return await this.file.removeDir(this.file.cacheDirectory, '');
   }
 
   private async getCachedFile(url: string) {
@@ -87,30 +85,31 @@ export class FileCacheProvider {
   // }
 
   private async cache(url: string, path: string, fileKey: string) {
-    const index = this.downloads.indexOf(fileKey);
-    if (index === -1) {
-      this.downloads.push(fileKey);
-      const fileTansferObject = this.fileTransfer.create();
-      return fileTansferObject.download(url, path + fileKey, true).then((fileEntry: FileEntry) => {
+    try {
+      const index = this.downloads.indexOf(fileKey);
+      if (index === -1) {
+        this.downloads.push(fileKey);
+        const fileTansferObject = this.fileTransfer.create();
+        await fileTansferObject.download(url, path + fileKey, true);
         this.downloads.splice(index, 1);
         return path + fileKey;
-      });
-    } else {
-      const error = new Error();
-      error.message = 'Download already started for this file: ' + fileKey;
-      error.name = 'inprogress';
+
+      } else {
+        const error = new Error();
+        error.message = 'Download already started for this file: ' + fileKey;
+        error.name = 'inprogress';
+        throw error;
+      }
+    } catch (error) {
       throw error;
     }
   }
 
   private async isCached(path: string, fileKey: string) {
-    return this.file
-      .checkFile(path, fileKey)
-      .then(bool => {
-        return bool;
-      })
-      .catch(err => {
-        return false;
-      });
+    try {
+      return await this.file.checkFile(path, fileKey);
+    } catch (error) {
+      return false;
+    }
   }
 }
