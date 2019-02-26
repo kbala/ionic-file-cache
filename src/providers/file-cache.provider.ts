@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { File, RemoveResult } from '@ionic-native/file';
+import { File, FileEntry, RemoveResult } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { Md5 } from 'md5-typescript';
 
@@ -8,10 +8,21 @@ declare var window: any;
 @Injectable()
 export class FileCacheProvider {
   private downloads: string[];
+  private ttl: number = 60 * 60;
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
+    setTimeout(() => {
+      this.deleteExpired();
+    }, 1000);
   }
 
+  /**
+   * Set time to live for the files. The files will be deleted from cache if it stays longer than ttl.
+   * @param ttl in milliseconds
+   */
+  public setDefaultTTL(ttl: number) {
+    this.ttl = ttl;
+  }
   /**
    * It downloads the files from given url and cache it into local file system.
    * It returns local file url if already cached, otherwise return the given url, and start caching behind.
@@ -55,7 +66,11 @@ export class FileCacheProvider {
    * It deletes all files from device cache directory.
    */
   public async clearCache(): Promise<RemoveResult> {
-    return await this.file.removeDir(this.file.cacheDirectory, '');
+    try {
+      return await this.file.removeDir(this.file.cacheDirectory, '');
+    } catch (error) {
+      throw error;
+    }
   }
 
   private async getCachedFile(url: string): Promise<string> {
@@ -89,7 +104,10 @@ export class FileCacheProvider {
       if (index === -1) {
         this.downloads.push(fileKey);
         const fileTansferObject = this.fileTransfer.create();
-        await fileTansferObject.download(url, path + fileKey, true);
+        const fe: FileEntry = await fileTansferObject.download(url, path + fileKey, true);
+        setTimeout(() => {
+          this.updateMeta(fe);
+        }, 100);
         this.downloads.splice(index, 1);
         return path + fileKey;
       } else {
@@ -108,6 +126,31 @@ export class FileCacheProvider {
       return await this.file.checkFile(path, fileKey);
     } catch (error) {
       return false;
+    }
+  }
+
+  private updateMeta(file: FileEntry) {
+    file.getMetadata((meta) => {
+      meta.modificationTime = new Date();
+      file.setMetadata(null, null, meta);
+    });
+  }
+
+  private async deleteExpired(){
+    try {
+      const files = await this.file.listDir(this.file.cacheDirectory, '/');
+      files.forEach((file)=>{
+        file.getMetadata((meta)=>{
+          const now = new Date();
+          const diff = now.getTime() - meta.modificationTime.getTime();
+          if(diff >= this.ttl){
+            file.remove(null);
+          }
+        })
+      })
+      
+    } catch (error) {
+      throw error
     }
   }
 }
