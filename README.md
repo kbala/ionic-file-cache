@@ -17,7 +17,6 @@ npm install ionic-file-cache --save
 This module requires ionic native plugins and latest ionic webview, Please install the following plugins
 + [File](https://ionicframework.com/docs/native/file)
 + [File Transfer](https://ionicframework.com/docs/native/file-transfer)
-+ [Ionic Webview](https://github.com/ionic-team/cordova-plugin-ionic-webview) version >=3.0.0
 
 
 # Usage
@@ -49,7 +48,7 @@ import { FileCacheProvider } from 'ionic-file-cache';
 @Injectable()
 export class MediaComponent {
 
-    public imageUrl: SafeUrl = "assets/imgs/loading.gif";
+    public imageUrl: string = "assets/imgs/loading.gif";
 
     constructor(private fileCachePvdr:FileCacheProvider){
         // Cache a live url
@@ -57,8 +56,7 @@ export class MediaComponent {
     }
 
     async getCachedFile(url: string) {
-        // It returns the cached url which is sanitized by `domSanitizer.bypassSecurityTrustUrl()`
-        this.imageUrl = await this.fileCachePvdr.getCachedFile(url);
+        this.imageUrl = await this.fileCachePvdr.cachedFile(url);
     }
 }
 ```
