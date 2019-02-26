@@ -4,6 +4,11 @@ import { File, FileEntry, RemoveResult } from '@ionic-native/file/ngx';
 import { Md5 } from 'md5-typescript';
 
 @Injectable()
+
+/**
+ * It caches the files into device's cache directory.
+ * If no TTL set, then each file will get expired in an hour and deleted from the cache directory.
+ */
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60 * 1000;
