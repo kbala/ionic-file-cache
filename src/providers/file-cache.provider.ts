@@ -130,27 +130,26 @@ export class FileCacheProvider {
   }
 
   private updateMeta(file: FileEntry) {
-    file.getMetadata((meta) => {
+    file.getMetadata(meta => {
       meta.modificationTime = new Date();
       file.setMetadata(null, null, meta);
     });
   }
 
-  private async deleteExpired(){
+  private async deleteExpired() {
     try {
       const files = await this.file.listDir(this.file.cacheDirectory, '/');
-      files.forEach((file)=>{
-        file.getMetadata((meta)=>{
+      files.forEach(file => {
+        file.getMetadata(meta => {
           const now = new Date();
           const diff = now.getTime() - meta.modificationTime.getTime();
-          if(diff >= this.ttl){
+          if (diff >= this.ttl) {
             file.remove(null);
           }
-        })
-      })
-      
+        });
+      });
     } catch (error) {
-      throw error
+      throw error;
     }
   }
 }
