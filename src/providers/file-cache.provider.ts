@@ -6,7 +6,7 @@ import { Md5 } from 'md5-typescript';
 @Injectable()
 export class FileCacheProvider {
   private downloads: string[];
-  private ttl: number = 60 * 60;
+  private ttl: number = 60 * 60 * 1000;
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
     setTimeout(() => {
