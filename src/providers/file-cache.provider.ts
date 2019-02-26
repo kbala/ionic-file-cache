@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
-import { File } from '@ionic-native/file/ngx';
+import { File, RemoveResult } from '@ionic-native/file/ngx';
 import { Md5 } from 'md5-typescript';
 
 @Injectable()
@@ -43,7 +43,7 @@ export class FileCacheProvider {
    * The respective local file of given web url will be deleted.
    * @param url The web url.
    */
-  public async deleteCache(url: string) {
+  public async deleteCache(url: string): Promise<RemoveResult> {
     const fileKey = Md5.init(url);
     const path = this.file.cacheDirectory;
     return await this.file.removeFile(path, fileKey);
@@ -52,7 +52,7 @@ export class FileCacheProvider {
   /**
    * It deletes all files from device cache directory.
    */
-  public async clearCache() {
+  public async clearCache(): Promise<RemoveResult> {
     try {
       return await this.file.removeDir(this.file.cacheDirectory, '');
     } catch (error) {
@@ -60,7 +60,7 @@ export class FileCacheProvider {
     }
   }
 
-  private async getCachedFile(url: string) {
+  private async getCachedFile(url: string): Promise<string> {
     try {
       const fileKey = Md5.init(url);
 
@@ -85,7 +85,7 @@ export class FileCacheProvider {
   //   }
   // }
 
-  private async cache(url: string, path: string, fileKey: string) {
+  private async cache(url: string, path: string, fileKey: string): Promise<string> {
     try {
       const index = this.downloads.indexOf(fileKey);
       if (index === -1) {
@@ -105,7 +105,7 @@ export class FileCacheProvider {
     }
   }
 
-  private async isCached(path: string, fileKey: string) {
+  private async isCached(path: string, fileKey: string): Promise<boolean> {
     try {
       return await this.file.checkFile(path, fileKey);
     } catch (error) {
