@@ -15,7 +15,7 @@ export class FileCacheProvider {
   }
 
   /**
-   * set time to live for the files. The files will be deleted from cache if it stays longer than ttl.
+   * Set time to live for the files. The files will be deleted from cache if it stays longer than ttl.
    * @param ttl in milliseconds
    */
   public setDefaultTTL(ttl: number) {
