@@ -138,7 +138,7 @@ export class FileCacheProvider {
 
   private async deleteExpired() {
     try {
-      const files = await this.file.listDir(this.file.cacheDirectory, '/');
+      const files = await this.file.listDir(this.file.cacheDirectory, '');
       files.forEach(file => {
         file.getMetadata(meta => {
           const now = new Date();
