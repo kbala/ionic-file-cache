@@ -73,7 +73,7 @@ export class FileCacheProvider {
     try {
       return await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
     } catch (error) {
-      throw error;
+      return null;
     }
   }
 
