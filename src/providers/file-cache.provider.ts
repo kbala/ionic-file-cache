@@ -12,9 +12,12 @@ import { Md5 } from 'md5-typescript';
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60 * 1000;
+  private dirName:string = 'ifc_cam73c8cm9rpst8y'
+  private appCacheDirectory:string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
-    setTimeout(() => {
+    this.createCacheDir(this.dirName);
+    setTimeout(() => {      
       this.deleteExpired();
     }, 1000);
   }
@@ -50,8 +53,7 @@ export class FileCacheProvider {
   public cacheFiles(urls: string[]) {
     urls.forEach(url => {
       const fileKey = Md5.init(url);
-      const path = this.file.cacheDirectory;
-      this.cache(url, path, fileKey);
+      this.cache(url, this.appCacheDirectory, fileKey);
     });
   }
 
@@ -61,8 +63,7 @@ export class FileCacheProvider {
    */
   public async deleteCache(url: string): Promise<RemoveResult> {
     const fileKey = Md5.init(url);
-    const path = this.file.cacheDirectory;
-    return await this.file.removeFile(path, fileKey);
+    return await this.file.removeFile(this.appCacheDirectory, fileKey);
   }
 
   /**
@@ -70,7 +71,7 @@ export class FileCacheProvider {
    */
   public async clearCache(): Promise<RemoveResult> {
     try {
-      return await this.file.removeDir(this.file.cacheDirectory, '');
+      return await this.file.removeDir(this.file.cacheDirectory, this.dirName);
     } catch (error) {
       throw error;
     }
@@ -79,13 +80,11 @@ export class FileCacheProvider {
   private async getCachedFile(url: string): Promise<string> {
     try {
       const fileKey = Md5.init(url);
-
-      const path = this.file.cacheDirectory;
-      const isCached = await this.isCached(path, fileKey);
+      const isCached = await this.isCached(this.appCacheDirectory, fileKey);
       if (isCached) {
-        return path + fileKey;
+        return this.appCacheDirectory + fileKey;
       } else {
-        return await this.cache(url, path, fileKey);
+        return await this.cache(url, this.appCacheDirectory, fileKey);
       }
     } catch (error) {
       throw error;
@@ -141,7 +140,7 @@ export class FileCacheProvider {
 
   private async deleteExpired() {
     try {
-      const files = await this.file.listDir(this.file.cacheDirectory, '');
+      const files = await this.file.listDir(this.file.cacheDirectory, this.dirName);
       files.forEach(file => {
         file.getMetadata(meta => {
           const now = new Date();
@@ -153,6 +152,14 @@ export class FileCacheProvider {
       });
     } catch (error) {
       throw error;
+    }
+  }
+
+  private async createCacheDir(dirName: string) {
+    try {
+      return await this.file.createDir(this.file.cacheDirectory, dirName, false)
+    } catch (error) {
+      return null;
     }
   }
 }
