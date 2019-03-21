@@ -9,6 +9,8 @@ declare var window: any;
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60;
+  private dirName: string = 'ifc_cam73c8cm9rpst8y';
+  private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
     setTimeout(() => {
@@ -46,9 +48,8 @@ export class FileCacheProvider {
    */
   public cacheFiles(urls: string[]) {
     urls.forEach(url => {
-      const fileKey = Md5.init(url);
-      const path = this.file.cacheDirectory;
-      this.cache(url, path, fileKey);
+      const fileKey = Md5.init(url);      
+      this.cache(url, this.appCacheDirectory, fileKey);
     });
   }
 
@@ -57,17 +58,17 @@ export class FileCacheProvider {
    * @param url The web url.
    */
   public async deleteCache(url: string): Promise<RemoveResult> {
-    const fileKey = Md5.init(url);
-    const path = this.file.cacheDirectory;
-    return await this.file.removeFile(path, fileKey);
+    const fileKey = Md5.init(url);    
+    return await this.file.removeFile(this.appCacheDirectory, fileKey);
   }
 
   /**
    * It deletes all files from device cache directory.
    */
-  public async clearCache(): Promise<RemoveResult> {
+  public async clearCache() {
     try {
-      return await this.file.removeDir(this.file.cacheDirectory, '');
+      await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
+      
     } catch (error) {
       throw error;
     }
@@ -75,14 +76,12 @@ export class FileCacheProvider {
 
   private async getCachedFile(url: string): Promise<string> {
     try {
-      const fileKey = Md5.init(url);
-
-      const path = this.file.cacheDirectory;
-      const isCached = await this.isCached(path, fileKey);
+      const fileKey = Md5.init(url);      
+      const isCached = await this.isCached(this.appCacheDirectory, fileKey);
       if (isCached) {
-        return path + fileKey;
+        return this.appCacheDirectory + fileKey;
       } else {
-        return await this.cache(url, path, fileKey);
+        return await this.cache(url, this.appCacheDirectory, fileKey);
       }
     } catch (error) {
       throw error;
@@ -138,7 +137,7 @@ export class FileCacheProvider {
 
   private async deleteExpired() {
     try {
-      const files = await this.file.listDir(this.file.cacheDirectory, '');
+      const files = await this.file.listDir(this.file.cacheDirectory, this.dirName);
       files.forEach(file => {
         file.getMetadata(meta => {
           const now = new Date();
