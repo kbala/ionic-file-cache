@@ -69,11 +69,12 @@ export class FileCacheProvider {
   /**
    * It deletes all files from device cache directory.
    */
-  public async clearCache(): Promise<RemoveResult> {
+  public async clearCache() {
     try {
-      return await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
+      await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
+      await this.createCacheDir(this.dirName);
     } catch (error) {
-      return null;
+      throw error;
     }
   }
 
