@@ -12,12 +12,12 @@ import { Md5 } from 'md5-typescript';
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60 * 1000;
-  private dirName:string = 'ifc_cam73c8cm9rpst8y'
-  private appCacheDirectory:string = this.file.cacheDirectory + this.dirName + '/';
+  private dirName: string = 'ifc_cam73c8cm9rpst8y';
+  private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
     this.createCacheDir(this.dirName);
-    setTimeout(() => {      
+    setTimeout(() => {
       this.deleteExpired();
     }, 1000);
   }
@@ -157,7 +157,7 @@ export class FileCacheProvider {
 
   private async createCacheDir(dirName: string) {
     try {
-      return await this.file.createDir(this.file.cacheDirectory, dirName, false)
+      return await this.file.createDir(this.file.cacheDirectory, dirName, false);
     } catch (error) {
       return null;
     }
