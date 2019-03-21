@@ -13,6 +13,7 @@ export class FileCacheProvider {
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
+    this.createCacheDir(this.dirName);
     setTimeout(() => {
       this.deleteExpired();
     }, 1000);
@@ -48,7 +49,7 @@ export class FileCacheProvider {
    */
   public cacheFiles(urls: string[]) {
     urls.forEach(url => {
-      const fileKey = Md5.init(url);      
+      const fileKey = Md5.init(url);
       this.cache(url, this.appCacheDirectory, fileKey);
     });
   }
@@ -58,7 +59,7 @@ export class FileCacheProvider {
    * @param url The web url.
    */
   public async deleteCache(url: string): Promise<RemoveResult> {
-    const fileKey = Md5.init(url);    
+    const fileKey = Md5.init(url);
     return await this.file.removeFile(this.appCacheDirectory, fileKey);
   }
 
@@ -68,7 +69,7 @@ export class FileCacheProvider {
   public async clearCache() {
     try {
       await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
-      
+      await this.createCacheDir(this.dirName);
     } catch (error) {
       throw error;
     }
@@ -76,7 +77,7 @@ export class FileCacheProvider {
 
   private async getCachedFile(url: string): Promise<string> {
     try {
-      const fileKey = Md5.init(url);      
+      const fileKey = Md5.init(url);
       const isCached = await this.isCached(this.appCacheDirectory, fileKey);
       if (isCached) {
         return this.appCacheDirectory + fileKey;
@@ -149,6 +150,14 @@ export class FileCacheProvider {
       });
     } catch (error) {
       throw error;
+    }
+  }
+
+  private async createCacheDir(dirName: string) {
+    try {
+      return await this.file.createDir(this.file.cacheDirectory, dirName, false);
+    } catch (error) {
+      return null;
     }
   }
 }
