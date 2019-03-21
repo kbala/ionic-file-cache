@@ -71,7 +71,7 @@ export class FileCacheProvider {
    */
   public async clearCache(): Promise<RemoveResult> {
     try {
-      return await this.file.removeDir(this.file.cacheDirectory, this.dirName);
+      return await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
     } catch (error) {
       throw error;
     }
