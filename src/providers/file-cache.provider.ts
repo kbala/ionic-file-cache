@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FileTransfer } from '@ionic-native/file-transfer/ngx';
-import { File, FileEntry, RemoveResult } from '@ionic-native/file/ngx';
+import { File, FileEntry } from '@ionic-native/file/ngx';
 import { Md5 } from 'md5-typescript';
 
 @Injectable()
@@ -61,9 +61,13 @@ export class FileCacheProvider {
    * The respective local file of given web url will be deleted.
    * @param url The web url.
    */
-  public async deleteCache(url: string): Promise<RemoveResult> {
-    const fileKey = Md5.init(url);
-    return await this.file.removeFile(this.appCacheDirectory, fileKey);
+  public async deleteCache(url: string): Promise<void> {
+    try {
+      const fileKey = Md5.init(url);
+      await this.file.removeFile(this.appCacheDirectory, fileKey);      
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
