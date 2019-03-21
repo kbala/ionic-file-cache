@@ -64,7 +64,7 @@ export class FileCacheProvider {
   public async deleteCache(url: string): Promise<void> {
     try {
       const fileKey = Md5.init(url);
-      await this.file.removeFile(this.appCacheDirectory, fileKey);      
+      await this.file.removeFile(this.appCacheDirectory, fileKey);
     } catch (error) {
       throw error;
     }
