@@ -12,12 +12,15 @@ import { Md5 } from 'md5-typescript';
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60 * 1000;
-  private disableCache: boolean = false;
+  private disableCache: boolean = true;
   private dirName: string = 'ifc_cam73c8cm9rpst8y';
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
-    this.setDisableCache();
+    this.createCacheDir(this.dirName);
+    setTimeout(() => {
+      this.deleteExpired();
+    }, 1000);
   }
 
   /**
@@ -29,15 +32,11 @@ export class FileCacheProvider {
   }
 
   /**
-   * Enable or disable the caching feature. Default is `false`.
+   * Enable or disable the caching feature. Default is `true`.
    * @param bool true or false
    */
-  public setDisableCache(bool: boolean = false) {
+  public setDisableCache(bool: boolean = true) {
     this.disableCache = bool;
-    this.createCacheDir(this.dirName);
-    setTimeout(() => {
-      this.deleteExpired();
-    }, 1000);
   }
   /**
    * It downloads the files from given url and cache it into local file system.
