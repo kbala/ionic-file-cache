@@ -12,6 +12,7 @@ import { Md5 } from 'md5-typescript';
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60 * 1000;
+  private disableCache: boolean = false;
   private dirName: string = 'ifc_cam73c8cm9rpst8y';
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
@@ -29,6 +30,14 @@ export class FileCacheProvider {
   public setDefaultTTL(ttl: number) {
     this.ttl = ttl;
   }
+
+  /**
+   * Enable or disable the caching feature. Default is `false`.
+   * @param bool true or false
+   */
+  public setDisableCache(bool: boolean = false) {
+    this.disableCache = bool;
+  }
   /**
    * It downloads the files from given url and cache it into local file system.
    * It returns local file url if already cached, otherwise return the given url, and start caching behind.
@@ -36,7 +45,11 @@ export class FileCacheProvider {
    */
   public async cachedFile(url: string): Promise<string> {
     try {
-      return await this.getCachedFile(url);
+      if (this.disableCache) {
+        return url;
+      } else {
+        return await this.getCachedFile(url);
+      }
     } catch (err) {
       if (err.name === 'inprogress') {
         return url;
