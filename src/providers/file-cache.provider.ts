@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { File, FileEntry, RemoveResult } from '@ionic-native/file';
+import { File, FileEntry } from '@ionic-native/file';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { Md5 } from 'md5-typescript';
 
@@ -8,7 +8,8 @@ declare var window: any;
 @Injectable()
 export class FileCacheProvider {
   private downloads: string[];
-  private ttl: number = 60 * 60;
+  private ttl: number = 60 * 60 * 1000;
+  private enableCache: boolean = false;
   private dirName: string = 'ifc_cam73c8cm9rpst8y';
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
@@ -26,6 +27,14 @@ export class FileCacheProvider {
   public setDefaultTTL(ttl: number) {
     this.ttl = ttl;
   }
+
+  /**
+   * Enable or disable the caching feature. The caching is disabled by default.
+   * @param bool true or false
+   */
+  public setEnableCache(bool: boolean) {
+    this.enableCache = bool;
+  }
   /**
    * It downloads the files from given url and cache it into local file system.
    * It returns local file url if already cached, otherwise return the given url, and start caching behind.
@@ -33,7 +42,11 @@ export class FileCacheProvider {
    */
   public async cachedFile(url: string): Promise<string> {
     try {
-      return await this.getCachedFile(url);
+      if (!this.enableCache) {
+        return url;
+      } else {
+        return await this.getCachedFile(url);
+      }
     } catch (err) {
       if (err.name === 'inprogress') {
         return url;
@@ -48,6 +61,9 @@ export class FileCacheProvider {
    * @param urls Array of web urls that needs to be cached.
    */
   public cacheFiles(urls: string[]) {
+    if (!this.enableCache) {
+      return;
+    }
     urls.forEach(url => {
       const fileKey = Md5.init(url);
       this.cache(url, this.appCacheDirectory, fileKey);
@@ -58,15 +74,25 @@ export class FileCacheProvider {
    * The respective local file of given web url will be deleted.
    * @param url The web url.
    */
-  public async deleteCache(url: string): Promise<RemoveResult> {
-    const fileKey = Md5.init(url);
-    return await this.file.removeFile(this.appCacheDirectory, fileKey);
+  public async deleteCache(url: string): Promise<void> {
+    if (!this.enableCache) {
+      return;
+    }
+    try {
+      const fileKey = Md5.init(url);
+      await this.file.removeFile(this.appCacheDirectory, fileKey);
+    } catch (error) {
+      throw error;
+    }
   }
 
   /**
    * It deletes all files from device cache directory.
    */
   public async clearCache() {
+    if (!this.enableCache) {
+      return;
+    }
     try {
       await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
       await this.createCacheDir(this.dirName);
@@ -137,6 +163,9 @@ export class FileCacheProvider {
   }
 
   private async deleteExpired() {
+    if (!this.enableCache) {
+      return;
+    }
     try {
       const files = await this.file.listDir(this.file.cacheDirectory, this.dirName);
       files.forEach(file => {
@@ -154,6 +183,9 @@ export class FileCacheProvider {
   }
 
   private async createCacheDir(dirName: string) {
+    if (!this.enableCache) {
+      return;
+    }
     try {
       return await this.file.createDir(this.file.cacheDirectory, dirName, false);
     } catch (error) {
