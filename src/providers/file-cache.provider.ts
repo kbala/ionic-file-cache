@@ -17,10 +17,7 @@ export class FileCacheProvider {
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
     this.downloads = new Array();
-    this.createCacheDir(this.dirName);
-    setTimeout(() => {
-      this.deleteExpired();
-    }, 1000);
+    this.setDisableCache();
   }
 
   /**
@@ -37,6 +34,10 @@ export class FileCacheProvider {
    */
   public setDisableCache(bool: boolean = false) {
     this.disableCache = bool;
+    this.createCacheDir(this.dirName);
+    setTimeout(() => {
+      this.deleteExpired();
+    }, 1000);
   }
   /**
    * It downloads the files from given url and cache it into local file system.
