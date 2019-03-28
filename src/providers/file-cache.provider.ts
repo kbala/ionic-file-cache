@@ -166,6 +166,7 @@ export class FileCacheProvider {
   }
 
   private async deleteExpired() {
+    if (this.disableCache) { return; }
     try {
       const files = await this.file.listDir(this.file.cacheDirectory, this.dirName);
       files.forEach(file => {
@@ -183,6 +184,7 @@ export class FileCacheProvider {
   }
 
   private async createCacheDir(dirName: string) {
+    if (this.disableCache) { return; }
     try {
       return await this.file.createDir(this.file.cacheDirectory, dirName, false);
     } catch (error) {
