@@ -35,23 +35,23 @@
     },
     "homepage": "https://github.com/amindia/ionic-file-cache#readme",
     "devDependencies": {
-        "@angular/common": "^7.2.4",
-        "@angular/core": "^7.2.4",
-        "@angular/platform-browser": "^7.2.4",
-        "@ionic-native/core": "^5.0.0",
-        "@types/jest": "^23.3.13",
-        "jest": "^23.6.0",
-        "prettier": "^1.16.1",
+        "@angular/common": "^7.2.11",
+        "@angular/core": "^7.2.11",
+        "@angular/platform-browser": "^7.2.11",
+        "@ionic-native/core": "^5.3.0",
+        "@types/jest": "^23.3.14",
+        "jest": "^24.5.0",
+        "prettier": "^1.16.4",
         "rxjs": "^6.4.0",
         "ts-jest": "^23.10.5",
-        "tslint": "^5.12.1",
-        "tslint-config-prettier": "^1.17.0",
-        "typescript": "^3.2.4",
+        "tslint": "^5.14.0",
+        "tslint-config-prettier": "^1.18.0",
+        "typescript": "^3.3.4000",
         "zone.js": "^0.8.29"
     },
     "dependencies": {
-        "@ionic-native/file": "^5.0.0",
-        "@ionic-native/file-transfer": "^5.0.0",
+        "@ionic-native/file": "^5.3.0",
+        "@ionic-native/file-transfer": "^5.3.0",
         "md5-typescript": "^1.0.5"
     }
 }

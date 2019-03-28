@@ -52,7 +52,7 @@ export class MediaComponent {
 
     constructor(private fileCachePvdr:FileCacheProvider){
         this.fileCachePvdr.setEnableCache(true);
-        this.fileCachePvdr.setDefaultTTL(30 * 60 * 1000);
+        this.fileCachePvdr.setDefaultTTL(60 * 60 * 1000);
 
         // Cache a live url
         this.getCachedFile('image url')
