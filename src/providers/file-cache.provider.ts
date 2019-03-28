@@ -12,7 +12,7 @@ import { Md5 } from 'md5-typescript';
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60 * 1000;
-  private disableCache: boolean = true;
+  private enableCache: boolean = false;
   private dirName: string = 'ifc_cam73c8cm9rpst8y';
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File, private fileTransfer: FileTransfer) {
@@ -32,11 +32,11 @@ export class FileCacheProvider {
   }
 
   /**
-   * Enable or disable the caching feature. Default is `true`.
+   * Enable or disable the caching feature. The caching is disabled by default.
    * @param bool true or false
    */
-  public setDisableCache(bool: boolean = true) {
-    this.disableCache = bool;
+  public setEnableCache(bool: boolean) {
+    this.enableCache = bool;
   }
   /**
    * It downloads the files from given url and cache it into local file system.
@@ -45,7 +45,7 @@ export class FileCacheProvider {
    */
   public async cachedFile(url: string): Promise<string> {
     try {
-      if (this.disableCache) {
+      if (!this.enableCache) {
         return url;
       } else {
         return await this.getCachedFile(url);
@@ -64,7 +64,7 @@ export class FileCacheProvider {
    * @param urls Array of web urls that needs to be cached.
    */
   public cacheFiles(urls: string[]) {
-    if (this.disableCache) {
+    if (!this.enableCache) {
       return;
     }
     urls.forEach(url => {
@@ -78,7 +78,7 @@ export class FileCacheProvider {
    * @param url The web url.
    */
   public async deleteCache(url: string): Promise<void> {
-    if (this.disableCache) {
+    if (!this.enableCache) {
       return;
     }
     try {
@@ -93,7 +93,7 @@ export class FileCacheProvider {
    * It deletes all files from device cache directory.
    */
   public async clearCache() {
-    if (this.disableCache) {
+    if (!this.enableCache) {
       return;
     }
     try {
@@ -166,7 +166,7 @@ export class FileCacheProvider {
   }
 
   private async deleteExpired() {
-    if (this.disableCache) {
+    if (!this.enableCache) {
       return;
     }
     try {
@@ -186,7 +186,7 @@ export class FileCacheProvider {
   }
 
   private async createCacheDir(dirName: string) {
-    if (this.disableCache) {
+    if (!this.enableCache) {
       return;
     }
     try {
