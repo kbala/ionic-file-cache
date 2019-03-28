@@ -64,6 +64,7 @@ export class FileCacheProvider {
    * @param urls Array of web urls that needs to be cached.
    */
   public cacheFiles(urls: string[]) {
+    if (this.disableCache) { return; }
     urls.forEach(url => {
       const fileKey = Md5.init(url);
       this.cache(url, this.appCacheDirectory, fileKey);
@@ -75,6 +76,7 @@ export class FileCacheProvider {
    * @param url The web url.
    */
   public async deleteCache(url: string): Promise<void> {
+    if (this.disableCache) { return; }
     try {
       const fileKey = Md5.init(url);
       await this.file.removeFile(this.appCacheDirectory, fileKey);
@@ -87,6 +89,7 @@ export class FileCacheProvider {
    * It deletes all files from device cache directory.
    */
   public async clearCache() {
+    if (this.disableCache) { return; }
     try {
       await this.file.removeRecursively(this.file.cacheDirectory, this.dirName);
       await this.createCacheDir(this.dirName);
