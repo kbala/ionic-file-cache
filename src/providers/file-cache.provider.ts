@@ -20,7 +20,7 @@ export class FileCacheProvider {
     this.createCacheDir(this.dirName);
     setTimeout(() => {
       this.deleteExpired();
-    }, 5000);
+    }, 1000);
   }
 
   /**
@@ -181,7 +181,7 @@ export class FileCacheProvider {
         });
       });
     } catch (error) {
-      throw error;
+      return;
     }
   }
 
