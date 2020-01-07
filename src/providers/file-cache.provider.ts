@@ -106,6 +106,8 @@ export class FileCacheProvider {
   private async getCachedFile(url: string): Promise<string> {
     try {
       const fileKey = Md5.init(url);
+      // tslint:disable-next-line: no-console
+      console.log('fileKey', fileKey)
       const isCached = await this.isCached(this.appCacheDirectory, fileKey);
       if (isCached) {
         return this.appCacheDirectory + fileKey;
@@ -131,6 +133,8 @@ export class FileCacheProvider {
       const index = this.downloads.indexOf(fileKey);
       if (index === -1) {
         this.downloads.push(fileKey);
+        // tslint:disable-next-line: no-console
+        console.log("cache", url);
         const fe: FileEntry = await this.downloadAndSaveFile(url, path, fileKey);
         setTimeout(() => {
           this.updateMeta(fe);
