@@ -150,21 +150,26 @@ export class FileCacheProvider {
 
   private async downloadAndSaveFile(fileUrl: string, path: string, fileName: string) {
     return new Promise<any>((resolve, reject) => {
+      // tslint:disable-next-line: no-console
       console.log(fileUrl);
       const xhr = new XMLHttpRequest();
       xhr.open('GET', fileUrl, true);
       xhr.responseType = 'blob';
       xhr.onload = async e => {
+        // tslint:disable-next-line: no-console
         console.log("xhr.status", xhr.status);
         if (xhr.status === 200) {
           // Note: .response instead of .responseText
           try {
+            // tslint:disable-next-line: no-console
             console.log("xhr.response", xhr.response);
             const blob = new Blob([xhr.response], { type: 'application/octet-stream' });
             const fileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
+            // tslint:disable-next-line: no-console
             console.log("fileEntry", fileEntry);
             resolve(fileEntry);
           } catch (error) {
+            // tslint:disable-next-line: no-console
             console.log(error);
 
             reject(error);
@@ -172,6 +177,7 @@ export class FileCacheProvider {
         }
       };
       xhr.onerror = e => {
+        // tslint:disable-next-line: no-console
         console.log(e);
         reject(e);
       };
