@@ -153,7 +153,7 @@ export class FileCacheProvider {
       const xhr = new XMLHttpRequest();
       xhr.open('GET', fileUrl, true);
       xhr.responseType = 'blob';
-      xhr.onload = async (e) => {
+      xhr.onload = async e => {
         if (xhr.status === 200) {
           // Note: .response instead of .responseText
           const blob = new Blob([xhr.response], { type: 'application/pdf' });
@@ -161,7 +161,7 @@ export class FileCacheProvider {
           resolve(fileEntry);
         }
       };
-      xhr.onerror = (e) => {
+      xhr.onerror = e => {
         reject(e);
       };
       xhr.send();
