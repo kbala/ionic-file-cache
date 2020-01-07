@@ -18,7 +18,7 @@ export class FileCacheProvider {
     this.downloads = new Array();
     this.createCacheDir(this.dirName);
     setTimeout(() => {
-      this.deleteExpired();
+      // this.deleteExpired();
     }, 1000);
   }
 
