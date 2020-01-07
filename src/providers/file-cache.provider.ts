@@ -150,22 +150,29 @@ export class FileCacheProvider {
 
   private async downloadAndSaveFile(fileUrl: string, path: string, fileName: string) {
     return new Promise<any>((resolve, reject) => {
+      console.log(fileUrl);
       const xhr = new XMLHttpRequest();
       xhr.open('GET', fileUrl, true);
       xhr.responseType = 'blob';
       xhr.onload = async e => {
+        console.log("xhr.status", xhr.status);
         if (xhr.status === 200) {
           // Note: .response instead of .responseText
           try {
+            console.log("xhr.response", xhr.response);
             const blob = new Blob([xhr.response], { type: 'application/octet-stream' });
             const fileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
+            console.log("fileEntry", fileEntry);
             resolve(fileEntry);
           } catch (error) {
+            console.log(error);
+
             reject(error);
           }
         }
       };
       xhr.onerror = e => {
+        console.log(e);
         reject(e);
       };
       xhr.send();
