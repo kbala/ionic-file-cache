@@ -18,7 +18,7 @@ export class FileCacheProvider {
     this.downloads = new Array();
     this.createCacheDir(this.dirName);
     setTimeout(() => {
-      // this.deleteExpired();
+      this.deleteExpired();
     }, 1000);
   }
 
@@ -156,9 +156,13 @@ export class FileCacheProvider {
       xhr.onload = async e => {
         if (xhr.status === 200) {
           // Note: .response instead of .responseText
-          const blob = new Blob([xhr.response], { type: 'application/pdf' });
-          const fileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
-          resolve(fileEntry);
+          try {
+            const blob = new Blob([xhr.response], { type: 'application/octet-stream' });
+            const fileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
+            resolve(fileEntry);
+          } catch (error) {
+            reject(error);
+          }
         }
       };
       xhr.onerror = e => {
