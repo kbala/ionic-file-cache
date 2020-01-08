@@ -229,7 +229,11 @@ export class FileCacheProvider {
       return;
     }
     try {
-      return await this.file.createDir(this.file.cacheDirectory, dirName, false);
+      const de = await this.file.createDir(this.file.cacheDirectory, dirName, false);
+      // tslint:disable-next-line: no-console
+      console.log('de', de);
+      return de;
+      
     } catch (error) {
       // tslint:disable-next-line: no-console
       console.log('createDir', error);
