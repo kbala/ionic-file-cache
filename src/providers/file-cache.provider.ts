@@ -168,25 +168,26 @@ export class FileCacheProvider {
             // tslint:disable-next-line: no-console
             console.log('xhr.response', xhr.response);
             const blob = new Blob([xhr.response]);
-            this.file.createFile(path, fileName, true).then(fe => {
-              // tslint:disable-next-line: no-console
-              console.log('file created', fe);
-              this.file.writeFile(path, fileName, blob, { replace: true }).then(fee => {
+            this.file.createFile(path, fileName, true).then(
+              fe => {
                 // tslint:disable-next-line: no-console
-                console.log('file wrote', fee);
-
-              }, err => {
+                console.log('file created', fe);
+                this.file.writeFile(path, fileName, blob, { replace: true }).then(
+                  fee => {
+                    // tslint:disable-next-line: no-console
+                    console.log('file wrote', fee);
+                  },
+                  err => {
+                    // tslint:disable-next-line: no-console
+                    console.log('file wrote error', err);
+                  },
+                );
+              },
+              err => {
                 // tslint:disable-next-line: no-console
-                console.log('file wrote error', err);
-
-              });
-
-            }, err => {
-              // tslint:disable-next-line: no-console
-              console.log('file creation error', err);
-
-            });
-
+                console.log('file creation error', err);
+              },
+            );
           } catch (error) {
             // tslint:disable-next-line: no-console
             console.log(error);
