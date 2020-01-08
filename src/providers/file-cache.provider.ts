@@ -16,7 +16,15 @@ export class FileCacheProvider {
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File) {
     this.downloads = new Array();
-    this.createCacheDir(this.dirName);
+    this.createCacheDir(this.dirName).then(de => {
+      // tslint:disable-next-line: no-console
+      console.log(de);
+
+    }, reason => {
+      // tslint:disable-next-line: no-console
+      console.log(reason);
+
+    });
     setTimeout(() => {
       this.deleteExpired();
     }, 1000);
@@ -167,7 +175,7 @@ export class FileCacheProvider {
           try {
             // tslint:disable-next-line: no-console
             console.log('xhr.response', xhr.response);
-            const blob = new Blob([xhr.response], { type: 'application/octet-stream' });
+            const blob = new Blob([xhr.response]);
             const fileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
             // tslint:disable-next-line: no-console
             console.log('fileEntry', fileEntry);
