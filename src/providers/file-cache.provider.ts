@@ -168,6 +168,7 @@ export class FileCacheProvider {
             // tslint:disable-next-line: no-console
             console.log('xhr.response', xhr.response);
             const blob = new Blob([xhr.response]);
+            await this.file.createFile(path, fileName, true);
             const fileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
             // tslint:disable-next-line: no-console
             console.log('fileEntry', fileEntry);
