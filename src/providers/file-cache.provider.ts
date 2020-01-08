@@ -225,6 +225,9 @@ export class FileCacheProvider {
   }
 
   private async createCacheDir(dirName: string) {
+    // tslint:disable-next-line: no-console
+    console.log('createCacheDir', dirName, this.enableCache);
+    
     if (!this.enableCache) {
       return;
     }
