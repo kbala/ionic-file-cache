@@ -11,7 +11,7 @@ import { Md5 } from 'md5-typescript';
 export class FileCacheProvider {
   private downloads: string[];
   private ttl: number = 60 * 60 * 1000;
-  private enableCache: boolean = false;
+  private enableCache: boolean = true;
   private dirName: string = 'ifc_cam73c8cm9rpst8y';
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File) {
