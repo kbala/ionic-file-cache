@@ -16,15 +16,16 @@ export class FileCacheProvider {
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
   constructor(private file: File) {
     this.downloads = new Array();
-    this.createCacheDir(this.dirName).then(de => {
-      // tslint:disable-next-line: no-console
-      console.log(de);
-
-    }, reason => {
-      // tslint:disable-next-line: no-console
-      console.log(reason);
-
-    });
+    this.createCacheDir(this.dirName).then(
+      de => {
+        // tslint:disable-next-line: no-console
+        console.log(de);
+      },
+      reason => {
+        // tslint:disable-next-line: no-console
+        console.log(reason);
+      },
+    );
     setTimeout(() => {
       this.deleteExpired();
     }, 1000);
