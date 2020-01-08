@@ -233,7 +233,7 @@ export class FileCacheProvider {
     } catch (error) {
       // tslint:disable-next-line: no-console
       console.log('createDir', error);
-      
+
       return null;
     }
   }
