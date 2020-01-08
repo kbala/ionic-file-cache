@@ -155,7 +155,7 @@ export class FileCacheProvider {
   private async downloadAndSaveFile(fileUrl: string, path: string, fileName: string) {
     return new Promise<any>((resolve, reject) => {
       // tslint:disable-next-line: no-console
-      console.log("KBala", fileUrl, path, fileName);
+      console.log('KBala', fileUrl, path, fileName);
       const xhr = new XMLHttpRequest();
       xhr.open('GET', fileUrl, true);
       xhr.responseType = 'blob';
