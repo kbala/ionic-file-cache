@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 import { File, FileEntry } from '@ionic-native/file/ngx';
 import { Md5 } from 'md5-typescript';
 
@@ -15,7 +14,7 @@ export class FileCacheProvider {
   private enableCache: boolean = true;
   private dirName: string = 'ifc_cam73c8cm9rpst8y';
   private appCacheDirectory: string = this.file.cacheDirectory + this.dirName + '/';
-  constructor(private file: File, private fileTransfer: FileTransfer) {
+  constructor(private file: File) {
     this.downloads = new Array();
     this.createCacheDir(this.dirName);
     setTimeout(() => {
@@ -136,10 +135,7 @@ export class FileCacheProvider {
         this.downloads.push(fileKey);
         // tslint:disable-next-line: no-console
         console.log('cache', url);
-        const fileTansferObject = this.fileTransfer.create();
-        const fe: FileEntry = await fileTansferObject.download(url, path + fileKey, true);
-        // tslint:disable-next-line: no-console
-        console.log('FileEntry', fe);
+        const fe: FileEntry = await this.downloadAndSaveFile(url, path, fileKey);
         setTimeout(() => {
           this.updateMeta(fe);
         }, 100);
@@ -154,6 +150,59 @@ export class FileCacheProvider {
     } catch (error) {
       throw error;
     }
+  }
+
+  private async downloadAndSaveFile(fileUrl: string, path: string, fileName: string) {
+    return new Promise<any>((resolve, reject) => {
+      // tslint:disable-next-line: no-console
+      console.log('KBala', fileUrl, path, fileName);
+      const xhr = new XMLHttpRequest();
+      xhr.open('GET', fileUrl, true);
+      xhr.responseType = 'blob';
+      xhr.onload = async e => {
+        // tslint:disable-next-line: no-console
+        console.log('xhr.status', xhr.status);
+        if (xhr.status === 200) {
+          // Note: .response instead of .responseText
+          try {
+            // tslint:disable-next-line: no-console
+            console.log('xhr.response', xhr.response);
+            const blob = new Blob([xhr.response]);
+            this.file.createFile(path, fileName, true).then(
+              fe => {
+                // tslint:disable-next-line: no-console
+                console.log('file created', fe);
+                this.file.writeFile(path, fileName, blob, { replace: true }).then(
+                  fee => {
+                    // tslint:disable-next-line: no-console
+                    console.log('file wrote', fee);
+                  },
+                  err => {
+                    // tslint:disable-next-line: no-console
+                    console.log('file wrote error', err);
+                  },
+                );
+              },
+              err => {
+                // tslint:disable-next-line: no-console
+                console.log('file creation error', err);
+              },
+            );
+          } catch (error) {
+            // tslint:disable-next-line: no-console
+            console.log(error);
+
+            reject(error);
+          }
+        }
+      };
+      xhr.onerror = e => {
+        // tslint:disable-next-line: no-console
+        console.log(e);
+        reject(e);
+      };
+      xhr.send();
+    });
   }
 
   private async isCached(path: string, fileKey: string): Promise<boolean> {
