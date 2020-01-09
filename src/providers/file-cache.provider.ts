@@ -138,6 +138,8 @@ export class FileCacheProvider {
         console.log('cache', url);
         const fileTansferObject = this.fileTransfer.create();
         const fe: FileEntry = await fileTansferObject.download(url, path + fileKey, true);
+        // tslint:disable-next-line: no-console
+        console.log('FileEntry', fe);
         setTimeout(() => {
           this.updateMeta(fe);
         }, 100);
