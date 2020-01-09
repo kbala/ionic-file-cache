@@ -106,8 +106,6 @@ export class FileCacheProvider {
   private async getCachedFile(url: string): Promise<string> {
     try {
       const fileKey = Md5.init(url);
-      // tslint:disable-next-line: no-console
-      console.log('fileKey', fileKey);
       const isCached = await this.isCached(this.appCacheDirectory, fileKey);
       if (isCached) {
         return this.appCacheDirectory + fileKey;
@@ -133,8 +131,6 @@ export class FileCacheProvider {
       const index = this.downloads.indexOf(fileKey);
       if (index === -1) {
         this.downloads.push(fileKey);
-        // tslint:disable-next-line: no-console
-        console.log('cache', url);
         const fe: FileEntry = await this.downloadAndSaveFile(url, path, fileKey);
         setTimeout(() => {
           this.updateMeta(fe);
@@ -154,51 +150,23 @@ export class FileCacheProvider {
 
   private async downloadAndSaveFile(fileUrl: string, path: string, fileName: string) {
     return new Promise<any>((resolve, reject) => {
-      // tslint:disable-next-line: no-console
-      console.log('KBala', fileUrl, path, fileName);
       const xhr = new XMLHttpRequest();
       xhr.open('GET', fileUrl, true);
       xhr.responseType = 'blob';
       xhr.onload = async e => {
-        // tslint:disable-next-line: no-console
-        console.log('xhr.status', xhr.status);
         if (xhr.status === 200) {
           // Note: .response instead of .responseText
           try {
-            // tslint:disable-next-line: no-console
-            console.log('xhr.response', xhr.response);
             const blob = new Blob([xhr.response]);
-            this.file.createFile(path, fileName, true).then(
-              fe => {
-                // tslint:disable-next-line: no-console
-                console.log('file created', fe);
-                this.file.writeFile(path, fileName, blob, { replace: true }).then(
-                  fee => {
-                    // tslint:disable-next-line: no-console
-                    console.log('file wrote', fee);
-                  },
-                  err => {
-                    // tslint:disable-next-line: no-console
-                    console.log('file wrote error', err);
-                  },
-                );
-              },
-              err => {
-                // tslint:disable-next-line: no-console
-                console.log('file creation error', err);
-              },
-            );
+            await this.file.createFile(path, fileName, true);
+            const fe = await this.file.writeFile(path, fileName, blob, { replace: true });
+            resolve(fe);
           } catch (error) {
-            // tslint:disable-next-line: no-console
-            console.log(error);
-
             reject(error);
           }
         }
       };
       xhr.onerror = e => {
-        // tslint:disable-next-line: no-console
-        console.log(e);
         reject(e);
       };
       xhr.send();
@@ -241,21 +209,12 @@ export class FileCacheProvider {
   }
 
   private async createCacheDir(dirName: string) {
-    // tslint:disable-next-line: no-console
-    console.log('createCacheDir', dirName, this.enableCache);
-
     if (!this.enableCache) {
       return;
     }
     try {
-      const de = await this.file.createDir(this.file.cacheDirectory, dirName, false);
-      // tslint:disable-next-line: no-console
-      console.log('de', de);
-      return de;
+      return await this.file.createDir(this.file.cacheDirectory, dirName, false);
     } catch (error) {
-      // tslint:disable-next-line: no-console
-      console.log('createDir', error);
-
       return null;
     }
   }
