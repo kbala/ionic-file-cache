@@ -51,6 +51,7 @@
     },
     "dependencies": {
         "@ionic-native/file": "^5.19.1",
+        "@ionic-native/file-transfer": "^5.19.1",
         "md5-typescript": "^1.0.5"
     }
 }
