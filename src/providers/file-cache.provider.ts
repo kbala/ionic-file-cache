@@ -151,13 +151,17 @@ export class FileCacheProvider {
   private async downloadAndSaveFile(fileUrl: string, path: string, fileName: string) {
     return new Promise<any>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open('GET', fileUrl, true);
-      xhr.responseType = 'blob';
+      xhr.open('POST', fileUrl, true);
+      xhr.responseType = 'arraybuffer';
       xhr.onload = async e => {
         if (xhr.status === 200) {
           // Note: .response instead of .responseText
           try {
-            const fe: FileEntry = await this.file.writeFile(path, fileName, xhr.response, { replace: true });
+            const mime = xhr.getResponseHeader('Content-Type');
+
+            const blob = new Blob([xhr.response], { type: mime });
+
+            const fe: FileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
             resolve(fe);
           } catch (error) {
             reject(error);
