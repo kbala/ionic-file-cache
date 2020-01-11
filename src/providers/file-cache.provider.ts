@@ -151,7 +151,7 @@ export class FileCacheProvider {
   private async downloadAndSaveFile(fileUrl: string, path: string, fileName: string) {
     return new Promise<any>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open('POST', fileUrl, true);
+      xhr.open('GET', fileUrl, true);
       xhr.responseType = 'arraybuffer';
       xhr.onload = async e => {
         if (xhr.status === 200) {
