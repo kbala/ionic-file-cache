@@ -159,7 +159,7 @@ export class FileCacheProvider {
           try {
             const blob = new Blob([xhr.response]);
             await this.file.createFile(path, fileName, true);
-            const fe:FileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
+            const fe: FileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
             resolve(fe);
           } catch (error) {
             reject(error);
