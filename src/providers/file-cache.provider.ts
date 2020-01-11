@@ -133,7 +133,7 @@ export class FileCacheProvider {
         this.downloads.push(fileKey);
         const fe: FileEntry = await this.downloadAndSaveFile(url, path, fileKey);
         setTimeout(() => {
-          // this.updateMeta(fe);
+          this.updateMeta(fe);
         }, 100);
         this.downloads.splice(index, 1);
         return path + fileKey;
@@ -157,9 +157,7 @@ export class FileCacheProvider {
         if (xhr.status === 200) {
           // Note: .response instead of .responseText
           try {
-            const blob = new Blob([xhr.response]);
-            await this.file.createFile(path, fileName, true);
-            const fe: FileEntry = await this.file.writeFile(path, fileName, blob, { replace: true });
+            const fe: FileEntry = await this.file.writeFile(path, fileName, xhr.response, { replace: true });
             resolve(fe);
           } catch (error) {
             reject(error);
