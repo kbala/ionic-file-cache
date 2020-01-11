@@ -171,6 +171,7 @@ export class FileCacheProvider {
       xhr.onerror = e => {
         reject(e);
       };
+      xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
       xhr.send();
     });
   }
