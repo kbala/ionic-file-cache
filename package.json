@@ -36,7 +36,7 @@
     "homepage": "https://github.com/amindia/ionic-file-cache#readme",
     "devDependencies": {
         "@angular/common": "^7.2.15",
-        "@angular/core": "^7.2.15",
+        "@angular/core": "^10.2.5",
         "@angular/platform-browser": "^7.2.15",
         "@ionic-native/core": "^5.19.1",
         "@types/jest": "^23.3.14",
